@@ -38,8 +38,8 @@ if node['ceph']['version'] != 'hammer' && node['ceph']['mgr']['enable']
   #   source 'ceph-mgr.service'
   #   mode 0644
   # end
-  #
-  # keyring = "/var/lib/ceph/mgr/#{cluster}-#{node['hostname']}/keyring"
+
+  keyring = "/var/lib/ceph/mgr/#{cluster}-#{node['hostname']}/keyring"
 
   execute 'format ceph-mgr-secret as keyring' do
     command lazy { "ceph auth get-or-create mgr.#{node['hostname']} mon 'allow *' > #{keyring}" }
