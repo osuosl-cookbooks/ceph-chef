@@ -34,6 +34,8 @@
 #            "journal": "/dev/sdf",
 #            "journal_type": "ssd",
 #            "encrypted": false,
+#            "block_db": "/dev/sdc",
+#            "block_wal": "/dev/sde",
 #            "status": ""
 #        }
 #    ]
@@ -108,6 +110,7 @@ if node['ceph']['osd']['devices']
 
   devices = Hash[(0...devices.size).zip devices] unless devices.is_a? Hash
 
+  osd_num = 0
   devices.each do |index, osd_device|
     # Only one partition by default for ceph data
     partitions = 1
@@ -129,6 +132,14 @@ if node['ceph']['osd']['devices']
       '--filestore'
     end
 
+    osd_block_db = unless osd_device['block_db'].nil?
+      "--block.db #{osd_device['block_db']}"
+    end
+
+    osd_block_wal = unless osd_device['block_wal'].nil?
+      "--block.wal #{osd_device['block_wal']}"
+    end
+
     # is_device - Is the device a partition or not
     # is_ceph - Does the device contain the default 'ceph data' or 'ceph journal' label
     # The -v option is added to the ceph-disk script so as to get a verbose output if debugging is needed. No other reason.
@@ -136,12 +147,7 @@ if node['ceph']['osd']['devices']
     execute "ceph-disk-prepare on #{osd_device['data']}" do
       command <<-EOH
         is_device=$(echo '#{osd_device['data']}' | egrep '/dev/(([a-z]{3,4}[0-9]$)|(cciss/c[0-9]{1}d[0-9]{1}p[0-9]$))')
-        ceph-disk -v prepare --cluster #{node['ceph']['cluster']} #{dmcrypt} #{osd_type} --fs-type #{node['ceph']['osd']['fs_type']} #{osd_device['data']} #{osd_device['journal']}
-        if [[ ! -z $is_device ]]; then
-          ceph-disk -v activate #{osd_device['data']}#{partitions}
-        else
-          ceph-disk -v activate #{osd_device['data']}
-        fi
+        ceph-volume lvm create #{osd_type} #{osd_block_wal} #{osd_block_db} --data #{osd_device['data']}
         sleep 3
       EOH
       # NOTE: The meaning of the uuids used here are listed above
@@ -149,7 +155,7 @@ if node['ceph']['osd']['devices']
       not_if "sgdisk -i1 #{osd_device['data']} | grep -i 4fbd7e29-9d25-41b8-afd0-5ec00ceff05d" if dmcrypt
       # Only if there is no 'ceph *' found in the label. The recipe os_remove_zap should be called to remove/zap
       # all devices if you are wanting to add all of the devices again (if this is not the initial setup)
-      not_if "parted --script #{osd_device['data']} print | egrep -sq '^ 1.*ceph'"
+      not_if "lsblk -l #{osd_device['data']} | grep -q '^ceph.*lvm'"
       action :run
       notifies :create, "ruby_block[save osd_device status #{index}]", :immediately
     end
@@ -164,10 +170,15 @@ if node['ceph']['osd']['devices']
       # only_if "ceph-disk list 2>/dev/null | grep 'ceph data' | grep #{osd_device['data']}"
     end
 
+    service "ceph-osd@#{osd_num}.service" do
+      action [:enable, :start]
+    end
+
     # NOTE: Do not attempt to change the 'ceph journal' label on a partition. If you do then ceph-disk will not
     # work correctly since it looks for 'ceph journal'. If you want to know what Journal is mapped to what OSD
     # then do: (cli below will output the map for you - you must be on an OSD node)
     # ceph-disk list
+    osd_num += 1
   end
 else
   Log.info("node['ceph']['osd']['devices'] empty")
