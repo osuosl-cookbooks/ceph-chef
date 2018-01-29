@@ -42,7 +42,7 @@ if node['ceph']['version'] != 'hammer' && node['ceph']['mgr']['enable']
   keyring = "/var/lib/ceph/mgr/#{cluster}-#{node['hostname']}/keyring"
 
   execute 'format ceph-mgr-secret as keyring' do
-    command lazy { "ceph auth get-or-create mgr.#{node['hostname']} mon 'allow *' > #{keyring}" }
+    command lazy { "ceph auth get-or-create mgr.#{node['hostname']} mon 'allow profile mgr' osd 'allow *' mds 'allow *' > #{keyring}" }
     user node['ceph']['owner']
     group node['ceph']['group']
     # only_if { ceph_chef_mgr_secret }
