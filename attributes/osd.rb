@@ -68,7 +68,7 @@ default['ceph']['osd']['add'] = [
 
 case node['platform_family']
 when 'debian', 'rhel', 'fedora'
-  packages = ['ceph']
+  packages = ['ceph', 'lvm2']
   packages += debug_packages(packages) if node['ceph']['install_debug']
   default['ceph']['osd']['packages'] = packages
 else
