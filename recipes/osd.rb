@@ -110,7 +110,6 @@ if node['ceph']['osd']['devices']
 
   devices = Hash[(0...devices.size).zip devices] unless devices.is_a? Hash
 
-  osd_num = 0
   devices.each do |index, osd_device|
     # Only one partition by default for ceph data
     partitions = 1
@@ -170,15 +169,10 @@ if node['ceph']['osd']['devices']
       # only_if "ceph-disk list 2>/dev/null | grep 'ceph data' | grep #{osd_device['data']}"
     end
 
-    service "ceph-osd@#{osd_num}.service" do
-      action [:enable, :start]
-    end
-
     # NOTE: Do not attempt to change the 'ceph journal' label on a partition. If you do then ceph-disk will not
     # work correctly since it looks for 'ceph journal'. If you want to know what Journal is mapped to what OSD
     # then do: (cli below will output the map for you - you must be on an OSD node)
     # ceph-disk list
-    osd_num += 1
   end
 else
   Log.info("node['ceph']['osd']['devices'] empty")
