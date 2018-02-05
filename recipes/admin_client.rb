@@ -42,7 +42,6 @@ ruby_block 'save ceph_chef_admin_secret' do
     fetch = Mixlib::ShellOut.new("ceph-authtool #{keyring} --print-key")
     fetch.run_command
     key = fetch.stdout
-    puts key
     node.normal['ceph']['admin-secret'] = key.delete!("\n")
     # node.set['ceph']['admin-secret'] = key.delete!("\n")
     # node.save
