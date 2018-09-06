@@ -27,7 +27,7 @@ suites:
   run_list:
     - "recipe[ceph-chef::repo]"
     - "recipe[ceph-chef]"
-  attributes: &defaults
+  attributes:
     ceph:
       version: jewel
       search_by_environment: true
@@ -43,22 +43,22 @@ suites:
 - name: osd
   run_list:
     - "role[ceph-osd]"
-  attributes: *defaults
+  attributes:
 - name: mon
   run_list:
     - "recipe[ceph-chef::mon]"
     - "recipe[ceph-chef::mon_start]"
     - "recipe[ceph-chef::mon_bootstrap_peer_hint]"
     - "recipe[ceph-chef::mon_keys]"
-  attributes: *defaults
+  attributes:
 - name: mds
   run_list:
     - "role[ceph-mds]"
-  attributes: *defaults
+  attributes:
 - name: radosgw
   run_list:
     - "role[ceph-radosgw]"
-  attributes: *defaults
+  attributes:
 - name: aio
   attributes:
     ceph:
