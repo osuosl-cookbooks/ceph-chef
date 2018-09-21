@@ -152,15 +152,17 @@ mon_allow_pool_delete = true
 <% end -%>
 <% end -%>
 
-<% if !node['ceph']['config']['mds'].nil? -%>
+<% if @is_mds -%>
 # NOTE: Only needed for CephFS
 [mds]
 <% if !node['ceph']['keyring']['mds'].empty? %>
 keyring = <%= node['ceph']['keyring']['mds'] %>
 <% end -%>
 mds cache size = 250000
+<% if !node['ceph']['config']['mds'].nil? -%>
 <% node['ceph']['config']['mds'].sort.each do |key, value| -%>
 <%= key %> = <%= value %>
+<% end %>
 <% end -%>
 <% end -%>
 

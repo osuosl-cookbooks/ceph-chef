@@ -23,19 +23,22 @@ include_recipe 'ceph-chef::mds_install'
 # cluster = 'ceph'
 cluster = node['ceph']['cluster']
 
-if node['ceph']['version'] == 'hammer'
-  directory "/var/lib/ceph/mds/#{cluster}-#{node['hostname']}" do
-    owner node['ceph']['owner']
-    group node['ceph']['group']
-    mode node['ceph']['mode']
-    recursive true
-    action :create
-    not_if "test -d /var/lib/ceph/mds/#{cluster}-#{node['hostname']}"
-  end
+directory "/var/lib/ceph/mds/#{cluster}-#{node['hostname']}" do
+  owner node['ceph']['owner']
+  group node['ceph']['group']
+  mode node['ceph']['mode']
+  recursive true
+  action :create
+  not_if "test -d /var/lib/ceph/mds/#{cluster}-#{node['hostname']}"
 end
 
-ceph_client 'mds' do
-  caps('osd' => 'allow *', 'mon' => 'allow rwx')
+ceph_chef_client 'mds' do
+  caps(
+    'osd' => 'allow *',
+    'mds' => 'allow *',
+    'mon' => 'profile mds',
+    'mgr' => 'profile mds'
+  )
   keyname "mds.#{node['hostname']}"
   filename "/var/lib/ceph/mds/#{cluster}-#{node['hostname']}/keyring"
 end
@@ -66,7 +69,7 @@ service 'ceph_mds' do
     service_name 'ceph-mds-all-starter'
     provider Chef::Provider::Service::Upstart
   else
-    service_name 'ceph'
+    service_name "ceph-mds@#{node['hostname']}"
   end
   action [:enable, :start]
   supports :restart => true

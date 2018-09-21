@@ -24,7 +24,7 @@ default['ceph']['cluster'] = 'ceph'
 default['ceph']['keyring']['global'] = '/etc/ceph/$cluster.$name.keyring'
 # NB: Could leave others set to '' and template would skip or do the same for global
 default['ceph']['keyring']['mon'] = '/etc/ceph/$cluster.$name.keyring'
-default['ceph']['keyring']['mds'] = '/etc/ceph/$cluster.$name.keyring'
+default['ceph']['keyring']['mds'] = '/var/lib/ceph/mds/$cluster-$id/keyring'
 default['ceph']['keyring']['rgw'] = '/etc/ceph/$cluster.client.radosgw'
 default['ceph']['keyring']['res'] = '/etc/ceph/$cluster.client.restapi'
 default['ceph']['keyring']['adm'] = '/etc/ceph/$cluster.client.admin.keyring'

@@ -50,7 +50,7 @@ end
 
 def create_client
   client_name = "cephfs.#{node['hostname']}"
-  filename = "/etc/ceph/ceph.client.#{client_name}.secret"
+  filename = "/etc/ceph/ceph.client.#{client_name}.keyring"
 
   name = 'cephfs'
   ceph_chef_client name do
@@ -62,7 +62,7 @@ end
 
 def manage_mount(dir, subdir, use_fuse, act)
   client_name = "cephfs.#{node['hostname']}"
-  filename = "/etc/ceph/ceph.client.#{client_name}.secret"
+  filename = "/etc/ceph/ceph.client.#{client_name}.keyring"
 
   if use_fuse
     if subdir != '/'
