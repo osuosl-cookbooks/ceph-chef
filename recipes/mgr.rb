@@ -50,6 +50,10 @@ if node['ceph']['version'] != 'hammer' && node['ceph']['mgr']['enable']
     sensitive true if Chef::Resource::Execute.method_defined? :sensitive
   end
 
+  link "/etc/ceph/ceph.mgr.#{node['hostname']}.keyring" do
+    to "/var/lib/ceph/mgr/ceph-#{node['hostname']}/keyring"
+  end
+
   service 'ceph_mgr' do
     case node['ceph']['radosgw']['init_style']
     when 'upstart'
