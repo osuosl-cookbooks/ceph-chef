@@ -29,7 +29,7 @@ when 'debian'
   node.default['ceph']['debian']['dev']['repository_key'] = 'https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc'
 when 'rhel'
   # Redhat/CentOS default repositories
-  node.default['ceph']['rhel']['stable']['repository'] = "#{node['ceph']['repo_url']}/rpm-#{node['ceph']['version']}/#{node['ceph']['el_version']}/x86_64/"
+  node.default['ceph']['rhel']['stable']['repository'] = "#{node['ceph']['repo_url']}/rpm-#{node['ceph']['version']}/#{node['ceph']['el_version']}/$basearch/"
   node.default['ceph']['rhel']['stable']['repository_key'] = 'file:///etc/pki/rpm-gpg/release.asc'
   # node.default['ceph']['rhel']['stable']['repository_key'] = 'https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/release.asc'
   node.default['ceph']['rhel']['testing']['repository'] = "#{node['ceph']['repo_url']}/rpm-testing/#{node['ceph']['el_version']}/x86_64/"
