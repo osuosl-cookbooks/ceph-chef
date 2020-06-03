@@ -1,8 +1,8 @@
 #
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ when 'rhel'
   service 'ceph_rest_api' do
     service_name 'ceph-rest-api'
     provider Chef::Provider::Service::Systemd
-    supports :restart => true, :status => true
+    supports restart: true, status: true
     action [:enable, :start]
     subscribes :restart, "template[/etc/ceph/#{node['ceph']['cluster']}.conf]"
   end

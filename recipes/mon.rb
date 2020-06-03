@@ -3,7 +3,7 @@
 # Cookbook: ceph
 # Recipe: mon
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -134,7 +134,7 @@ ruby_block 'save ceph_chef_mon_secret' do
     fetch = Mixlib::ShellOut.new("ceph-authtool #{keyring} --print-key --name=mon.")
     fetch.run_command
     key = fetch.stdout
-    node.normal['ceph']['monitor-secret'] = key.delete!("\n")
+    node.default['ceph']['monitor-secret'] = key.delete!("\n")
     # node.set['ceph']['monitor-secret'] = key.delete!("\n")
     # node.save
   end
@@ -174,15 +174,15 @@ ruby_block 'mon-finalize' do
 end
 
 if node['ceph']['version'] != 'hammer'
-    # Include our overridden systemd file to handle starting the service during bootstrap
-    cookbook_file '/etc/systemd/system/ceph-mon@.service' do
-      notifies :run, 'execute[ceph-systemctl-daemon-reload]', :immediately
-      action :create
-      only_if { rhel? && systemd? }
-    end
+  # Include our overridden systemd file to handle starting the service during bootstrap
+  cookbook_file '/etc/systemd/system/ceph-mon@.service' do
+    notifies :run, 'execute[ceph-systemctl-daemon-reload]', :immediately
+    action :create
+    only_if { rhel? && systemd? }
+  end
 
-    execute 'chown mon dir' do
-      command "chown -R #{node['ceph']['owner']}:#{node['ceph']['group']} /var/lib/ceph/mon/#{node['ceph']['cluster']}-#{node['hostname']}"
-      only_if { rhel? && systemd? }
-    end
+  execute 'chown mon dir' do
+    command "chown -R #{node['ceph']['owner']}:#{node['ceph']['group']} /var/lib/ceph/mon/#{node['ceph']['cluster']}-#{node['hostname']}"
+    only_if { rhel? && systemd? }
+  end
 end

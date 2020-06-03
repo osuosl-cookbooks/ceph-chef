@@ -1,9 +1,9 @@
 #
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 # Recipe:: osd
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -111,9 +111,6 @@ if node['ceph']['osd']['devices']
   devices = Hash[(0...devices.size).zip devices] unless devices.is_a? Hash
 
   devices.each do |index, osd_device|
-    # Only one partition by default for ceph data
-    partitions = 1
-
     if !node['ceph']['osd']['devices'][index]['status'].nil? && node['ceph']['osd']['devices'][index]['status'] == 'deployed'
       Log.info("osd: osd device '#{osd_device}' has already been setup.")
       next
@@ -126,18 +123,18 @@ if node['ceph']['osd']['devices']
     # set the storage type for the OSD data
     # if none is specified use the default specified by upstream (currently bluestore)
     osd_type = if node['ceph']['osd']['type'].eql?('bluestore')
-      '--bluestore'
-    elsif node['ceph']['osd']['type'].eql?('filestore')
-      '--filestore'
-    end
+                 '--bluestore'
+               elsif node['ceph']['osd']['type'].eql?('filestore')
+                 '--filestore'
+               end
 
     osd_block_db = unless osd_device['block_db'].nil?
-      "--block.db #{osd_device['block_db']}"
-    end
+                     "--block.db #{osd_device['block_db']}"
+                   end
 
     osd_block_wal = unless osd_device['block_wal'].nil?
-      "--block.wal #{osd_device['block_wal']}"
-    end
+                      "--block.wal #{osd_device['block_wal']}"
+                    end
 
     # is_device - Is the device a partition or not
     # is_ceph - Does the device contain the default 'ceph data' or 'ceph journal' label
@@ -162,7 +159,7 @@ if node['ceph']['osd']['devices']
     # Add this status to the node env so that we can implement recreate and/or delete functionalities in the future.
     ruby_block "save osd_device status #{index}" do
       block do
-        node.normal['ceph']['osd']['devices'][index]['status'] = 'deployed'
+        node.default['ceph']['osd']['devices'][index]['status'] = 'deployed'
         # node.save
       end
       action :nothing

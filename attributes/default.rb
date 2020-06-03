@@ -1,5 +1,5 @@
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -56,8 +56,7 @@ default['ceph']['branch'] = 'stable' # Can be stable, testing or dev.
 # Must set this outside of this cookbook!
 # default['ceph']['version'] = 'hammer'
 
-default['ceph']['init_style'] = case node['platform']
-                                when 'ubuntu'
+default['ceph']['init_style'] = if platform?('ubuntu')
                                   'upstart'
                                 else
                                   'sysvinit'
@@ -65,13 +64,13 @@ default['ceph']['init_style'] = case node['platform']
 
 # NOTE: If the version is 'hammer' then change owner and group to 'root'
 if node['ceph']['version'] == 'hammer'
-    default['ceph']['owner'] = 'root'
-    default['ceph']['group'] = 'root'
-    default['ceph']['mode'] = 0o0755
+  default['ceph']['owner'] = 'root'
+  default['ceph']['group'] = 'root'
+  default['ceph']['mode'] = 0o0755
 else
-    default['ceph']['owner'] = 'ceph'
-    default['ceph']['group'] = 'ceph'
-    default['ceph']['mode'] = 0o0750
+  default['ceph']['owner'] = 'ceph'
+  default['ceph']['group'] = 'ceph'
+  default['ceph']['mode'] = 0o0750
 end
 
 # Override these in your environment file or here if you wish. Don't put them in the 'ceph''config''global' section.
@@ -118,7 +117,7 @@ default['ceph']['netaddr_install'] = true
 
 case node['platform_family']
 when 'debian'
-  packages = ['ceph-common', 'python-pycurl']
+  packages = %w(ceph-common python-pycurl)
   packages += debug_packages(packages) if node['ceph']['install_debug']
   default['ceph']['packages'] = packages
 when 'rhel', 'fedora'

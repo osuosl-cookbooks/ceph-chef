@@ -1,6 +1,6 @@
 #
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 #
 
 # NB: Important - If the `ceph.repo` does not get created correctly then check to make sure you have set
-# the node attribute for repo create to true. 
+# the node attribute for repo create to true.
 
 case node['platform_family']
 when 'debian'
@@ -55,7 +55,7 @@ when 'suse'
   node.default['ceph']['suse']['stable']['repository'] = "#{node['ceph']['repo_url']}/rpm-#{node['ceph']['version']}/#{suse_version}/x86_64/ceph-release-1-0.#{suse_version}.noarch.rpm"
   node.default['ceph']['suse']['testing']['repository'] = "#{node['ceph']['repo_url']}/rpm-testing/#{suse_version}/x86_64/ceph-release-1-0.#{suse_version}.noarch.rpm"
 else
-  fail "#{node['platform_family']} is not supported"
+  raise "#{node['platform_family']} is not supported"
 end
 
 case node['platform_family']
@@ -64,5 +64,5 @@ when 'debian'
 when 'rhel', 'suse', 'fedora'
   include_recipe 'ceph-chef::rpm'
 else
-  fail 'not supported'
+  raise 'not supported'
 end

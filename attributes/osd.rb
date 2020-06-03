@@ -1,5 +1,5 @@
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,16 +59,15 @@ default['ceph']['osd']['role'] = 'search-ceph-osd'
 # Example of how to set this up via attributes file. Change to support your naming, the correct OSD info etc. this
 # is ONLY an example.
 default['ceph']['osd']['remove'] = [
-  { 'node' => 'ceph-vm3', 'osd' => 11, 'zap' => false, 'partition' => 1, 'data' => '/dev/sdf', 'journal' => '/dev/sdf' }
+  { 'node' => 'ceph-vm3', 'osd' => 11, 'zap' => false, 'partition' => 1, 'data' => '/dev/sdf', 'journal' => '/dev/sdf' },
 ]
 
 default['ceph']['osd']['add'] = [
-  { 'node' => 'ceph-vm3', 'type' => 'hdd', 'data' => '/dev/sde', 'journal' => '/dev/sde' }
+  { 'node' => 'ceph-vm3', 'type' => 'hdd', 'data' => '/dev/sde', 'journal' => '/dev/sde' },
 ]
 
-case node['platform_family']
-when 'debian', 'rhel', 'fedora'
-  packages = ['ceph', 'lvm2']
+if platform_family?('debian', 'rhel', 'fedora')
+  packages = %w(ceph lvm2)
   packages += debug_packages(packages) if node['ceph']['install_debug']
   default['ceph']['osd']['packages'] = packages
 else

@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ ruby_block 'save ceph_chef_admin_secret' do
     fetch = Mixlib::ShellOut.new("ceph-authtool #{keyring} --print-key")
     fetch.run_command
     key = fetch.stdout
-    node.normal['ceph']['admin-secret'] = key.delete!("\n")
+    node.default['ceph']['admin-secret'] = key.delete!("\n")
     # node.set['ceph']['admin-secret'] = key.delete!("\n")
     # node.save
   end

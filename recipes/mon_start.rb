@@ -3,7 +3,7 @@
 # Cookbook: ceph
 # Recipe: mon_start
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,29 +31,27 @@ if service_type == 'upstart'
   end
   service 'ceph-mon-all' do
     provider Chef::Provider::Service::Upstart
-    supports :status => true
+    supports status: true
     action [:enable, :start]
     subscribes :restart, "template[/etc/ceph/#{node['ceph']['cluster']}.conf]"
   end
+elsif node['ceph']['version'] != 'hammer'
+  service 'ceph.target-mon' do
+    service_name 'ceph.target'
+    provider Chef::Provider::Service::Systemd
+    action [:enable, :start]
+    subscribes :restart, "template[/etc/ceph/#{node['ceph']['cluster']}.conf]"
+  end
+  service 'ceph-mon' do
+    service_name "ceph-mon@#{node['hostname']}"
+    action [:enable, :start]
+    only_if { systemd? }
+  end
 else
-  if node['ceph']['version'] != 'hammer'
-    service 'ceph.target-mon' do
-      service_name 'ceph.target'
-      provider Chef::Provider::Service::Systemd
-      action [:enable, :start]
-      subscribes :restart, "template[/etc/ceph/#{node['ceph']['cluster']}.conf]"
-    end
-    service 'ceph-mon' do
-      service_name "ceph-mon@#{node['hostname']}"
-      action [:enable, :start]
-      only_if { systemd? }
-    end
-  else
-    service 'ceph' do
-      supports :restart => true, :status => true
-      action [:enable, :start]
-      subscribes :restart, "template[/etc/ceph/#{node['ceph']['cluster']}.conf]"
-    end
+  service 'ceph' do
+    supports restart: true, status: true
+    action [:enable, :start]
+    subscribes :restart, "template[/etc/ceph/#{node['ceph']['cluster']}.conf]"
   end
 end
 

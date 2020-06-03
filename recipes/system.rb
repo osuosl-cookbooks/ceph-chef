@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@
 
 # This will allow for a much higher pid count instead of the default 64k since Ceph uses a lot of threads/daemons
 
-node['ceph']['system']['sysctls'].each_with_index do |sysctl, _index|
-  execute "sysctl-updates-#{_index}" do
+node['ceph']['system']['sysctls'].each_with_index do |sysctl, index|
+  execute "sysctl-updates-#{index}" do
     command "echo #{sysctl} >> /etc/sysctl.conf"
     not_if "cat /etc/sysctl.conf | grep #{sysctl}"
   end

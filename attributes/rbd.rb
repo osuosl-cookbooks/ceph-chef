@@ -1,5 +1,5 @@
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ default['ceph']['rbd']['secret_file'] = '/etc/chef/secrets/ceph_chef_rbd'
 default['ceph']['rbd']['role'] = 'search-ceph-rbd'
 
 # NOTE: Add libvirtd??
-case node['platform_family']
-when 'debian'
+if platform_family?('debian')
   packages = []
   packages += debug_packages(packages) if node['ceph']['install_debug']
   default['ceph']['rbd']['packages'] = packages

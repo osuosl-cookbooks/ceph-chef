@@ -1,9 +1,9 @@
 #
 # Author:: Kyle Bader <kyle.bader@dreamhost.com>
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 # Recipe:: mds
 #
-# Copyright 2011, DreamHost Web Hosting
+# Copyright:: 2011-2020, DreamHost Web Hosting
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ end
 file "/var/lib/ceph/mds/#{cluster}-#{node['hostname']}/done" do
   owner node['ceph']['owner']
   group node['ceph']['group']
-  mode 00644
+  mode '644'
 end
 
 service_type = node['ceph']['osd']['init_style']
@@ -60,7 +60,7 @@ filename = case service_type
 file "/var/lib/ceph/mds/#{cluster}-#{node['hostname']}/#{filename}" do
   owner node['ceph']['owner']
   group node['ceph']['group']
-  mode 00644
+  mode '644'
 end
 
 service 'ceph_mds' do
@@ -72,5 +72,5 @@ service 'ceph_mds' do
     service_name "ceph-mds@#{node['hostname']}"
   end
   action [:enable, :start]
-  supports :restart => true
+  supports restart: true
 end

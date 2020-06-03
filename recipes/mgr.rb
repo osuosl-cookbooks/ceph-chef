@@ -1,6 +1,6 @@
 #
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,6 +63,6 @@ if node['ceph']['version'] != 'hammer' && node['ceph']['mgr']['enable']
       service_name "ceph-mgr@#{node['hostname']}"
     end
     action [:enable, :start]
-    supports :restart => true
+    supports restart: true
   end
 end

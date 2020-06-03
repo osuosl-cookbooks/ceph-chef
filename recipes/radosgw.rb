@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -80,17 +80,15 @@ end
 # TODO: This block is only here as a reminder to update the optimal PG size later...
 # rgw_optimal_pg = ceph_chef_power_of_2(get_ceph_chef_osd_nodes.length*node['ceph']['pgs_per_node']/node['ceph']['rgw']['replicas']*node['ceph']['rgw']['portion']/100)
 
-=begin
-# check to see if we should up the number of pg's now for the core buckets pool
-(node[['ceph']['pgp_auto_adjust'] ? %w{pg_num pgp_num} : %w{pg_num}).each do |pg|
-    bash "update-rgw-buckets-#{pg}" do
-        user "root"
-        code "ceph osd pool set .rgw.buckets #{pg} #{rgw_optimal_pg}"
-        only_if { %x[ceph osd pool get .rgw.buckets #{pg} | awk '{print $2}'].to_i < rgw_optimal_pg }
-        notifies :run, "bash[wait-for-pgs-creating]", :immediately
-    end
-end
-=end
+# # check to see if we should up the number of pg's now for the core buckets pool
+# (node[['ceph']['pgp_auto_adjust'] ? %w{pg_num pgp_num} : %w{pg_num}).each do |pg|
+#     bash "update-rgw-buckets-#{pg}" do
+#         user "root"
+#         code "ceph osd pool set .rgw.buckets #{pg} #{rgw_optimal_pg}"
+#         only_if { %x[ceph osd pool get .rgw.buckets #{pg} | awk '{print $2}'].to_i < rgw_optimal_pg }
+#         notifies :run, "bash[wait-for-pgs-creating]", :immediately
+#     end
+# end
 
 # DOCS: Begin
 

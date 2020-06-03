@@ -1,6 +1,6 @@
 #
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,14 +41,14 @@ cookbook_file '/usr/local/bin/radosgw-admin2' do
   source 'radosgw-admin2'
   owner 'root'
   group 'root'
-  mode 0755
+  mode '755'
 end
 
 cookbook_file '/usr/local/bin/rgw_s3_api.py' do
   source 'rgw_s3_api.py'
   owner 'root'
   group 'root'
-  mode 0755
+  mode '755'
 end
 
 include_recipe 'ceph-chef::install'

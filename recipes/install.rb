@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph-chef
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
 #
 
 if node['ceph']['version'] != 'hammer'
-    execute 'change-ceph-conf-perm' do
-     command lazy { "sudo chown #{node['ceph']['owner']}:#{node['ceph']['group']} -R /etc/ceph" }
-     ignore_failure true
-    end
+  execute 'change-ceph-conf-perm' do
+    command lazy { "sudo chown #{node['ceph']['owner']}:#{node['ceph']['group']} -R /etc/ceph" }
+    ignore_failure true
+  end
 end

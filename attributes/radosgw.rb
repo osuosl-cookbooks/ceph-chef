@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 # Attributes:: radosgw
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Copyright 2011, DreamHost Web Hosting
+# Copyright:: 2011-2020, DreamHost Web Hosting
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ default['ceph']['radosgw']['init_style'] = node['ceph']['init_style']
 # NB: IMPORTANT - 'buckets' below is an array of json data and not just the name of a bucket!
 default['ceph']['radosgw']['users'] = [
   { 'uid' => 'radosgw', 'name' => 'Admin', 'admin_caps' => 'users=*;buckets=*;metadata=*;usage=*;zone=*', 'access_key' => '', 'secret_key' => '', 'max_buckets' => 0, 'buckets' => [{}] },
-  { 'uid' => 'tester', 'name' => 'Tester', 'admin_caps' => 'usage=read; user=read; bucket=*',  'access_key' => '', 'secret_key' => '', 'max_buckets' => 3, 'buckets' => [{}] }
+  { 'uid' => 'tester', 'name' => 'Tester', 'admin_caps' => 'usage=read; user=read; bucket=*', 'access_key' => '', 'secret_key' => '', 'max_buckets' => 3, 'buckets' => [{}] },
 ]
 
 default['ceph']['radosgw']['secret_file'] = '/etc/chef/secrets/ceph_chef_rgw'
@@ -89,11 +89,11 @@ default['ceph']['radosgw']['secret_file'] = '/etc/chef/secrets/ceph_chef_rgw'
 
 case node['platform_family']
 when 'debian'
-  packages = ['radosgw', 'radosgw-agent', 'python-boto']
+  packages = %w(radosgw radosgw-agent python-boto)
   packages += debug_packages(packages) if node['ceph']['install_debug']
   default['ceph']['radosgw']['packages'] = packages
 when 'rhel', 'fedora', 'suse'
-  default['ceph']['radosgw']['packages'] = ['ceph-radosgw', 'mailcap'] # NOTE: mailcap should have been a dependency in Ceph. radosgw-agent later
+  default['ceph']['radosgw']['packages'] = %w(ceph-radosgw mailcap) # NOTE: mailcap should have been a dependency in Ceph. radosgw-agent later
 else
   default['ceph']['radosgw']['packages'] = []
 end

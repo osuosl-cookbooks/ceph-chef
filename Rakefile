@@ -18,7 +18,7 @@ namespace :style do
       t.options = {
         fail_tags: ['any'],
         tags: ['~FC003'],
-        chef_version: '12.5.0'
+        chef_version: '12.5.0',
       }
     end
   rescue LoadError

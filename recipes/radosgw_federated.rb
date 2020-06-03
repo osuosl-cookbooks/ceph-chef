@@ -1,8 +1,8 @@
 #
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -77,14 +77,14 @@ if node['ceph']['pools']['radosgw']['federated_enable']
     end
     execute 'update-ceph-radosgw-secret' do
       command lazy { "sudo ceph-authtool #{keyring} --name=client.radosgw.#{inst['region']}-#{inst['name']} --add-key=#{new_key} --cap osd 'allow rwx' --cap mon 'allow rwx'" }
-      only_if { !new_key.to_s.strip.empty? }
+      not_if { new_key.to_s.strip.empty? }
       only_if "test -s #{keyring}"
       sensitive true if Chef::Resource::Execute.method_defined? :sensitive
     end
 
     execute 'write-ceph-radosgw-secret' do
       command lazy { "sudo ceph-authtool #{keyring} --create-keyring --name=client.radosgw.#{inst['region']}-#{inst['name']} --add-key=#{new_key} --cap osd 'allow rwx' --cap mon 'allow rwx'" }
-      only_if { !new_key.to_s.strip.empty? }
+      not_if { new_key.to_s.strip.empty? }
       not_if "test -s #{keyring}"
       sensitive true if Chef::Resource::Execute.method_defined? :sensitive
     end
@@ -150,10 +150,10 @@ if node['ceph']['pools']['radosgw']['federated_enable']
         source 'radosgw-federated-no-replication-region.json.erb'
         variables lazy {
           {
-            :region => (inst['region']).to_s,
-            :zone => (inst['name']).to_s,
-            :zone_url => (inst['url']).to_s,
-            :zone_port => (inst['port']).to_s
+            region: (inst['region']).to_s,
+            zone: (inst['name']).to_s,
+            zone_url: (inst['url']).to_s,
+            zone_port: (inst['port']).to_s,
           }
         }
         not_if "test -s /etc/ceph/#{inst['region']}-#{inst['name']}-region.json"
@@ -163,10 +163,10 @@ if node['ceph']['pools']['radosgw']['federated_enable']
         source 'radosgw-federated-no-replication-region-map.json.erb'
         variables lazy {
           {
-            :region => (inst['region']).to_s,
-            :zone => (inst['name']).to_s,
-            :zone_url => (inst['url']).to_s,
-            :zone_port => (inst['port']).to_s
+            region: (inst['region']).to_s,
+            zone: (inst['name']).to_s,
+            zone_url: (inst['url']).to_s,
+            zone_port: (inst['port']).to_s,
           }
         }
         not_if "test -s /etc/ceph/#{inst['region']}-#{inst['name']}-region-map.json"
@@ -183,10 +183,10 @@ if node['ceph']['pools']['radosgw']['federated_enable']
         source 'radosgw-federated-zone.json.erb'
         variables lazy {
           {
-            :region => (inst['region']).to_s,
-            :zone => (inst['name']).to_s,
-            :secret_key => '',
-            :access_key => ''
+            region: (inst['region']).to_s,
+            zone: (inst['name']).to_s,
+            secret_key: '',
+            access_key: '',
           }
         }
         not_if "test -s /etc/ceph/#{zone}-zone.json"

@@ -1,9 +1,8 @@
 name 'ceph-chef'
 maintainer 'Hans Chris Jones'
 maintainer_email 'chris.jones@lambdastack.io'
-license 'Apache v2.0'
+license 'Apache-2.0'
 description 'Installs/Configures Ceph (Jewel and above)'
-long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version '1.1.27'
 
 depends	'apache2', '>= 1.1.12'
