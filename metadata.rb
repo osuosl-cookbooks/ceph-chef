@@ -3,7 +3,7 @@ maintainer 'Hans Chris Jones'
 maintainer_email 'chris.jones@lambdastack.io'
 license 'Apache-2.0'
 description 'Installs/Configures Ceph (Jewel and above)'
-version '1.1.27'
+version '2.0.0'
 
 depends	'apache2', '>= 1.1.12'
 depends 'apt'
