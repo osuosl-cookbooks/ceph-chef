@@ -181,8 +181,9 @@ if node['ceph']['version'] != 'hammer'
     only_if { rhel? && systemd? }
   end
 
-  execute 'chown mon dir' do
-    command "chown -R #{node['ceph']['owner']}:#{node['ceph']['group']} /var/lib/ceph/mon/#{node['ceph']['cluster']}-#{node['hostname']}"
-    only_if { rhel? && systemd? }
+  directory "/var/lib/ceph/mon/#{node['ceph']['cluster']}-#{node['hostname']}" do
+    owner node['ceph']['owner']
+    group node['ceph']['group']
+    recursive true
   end
 end
