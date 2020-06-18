@@ -18,3 +18,5 @@ supports 'centos', '>= 7.1'
 
 issues_url 'https://github.com/ceph/ceph-chef/issues'
 source_url 'https://github.com/ceph/ceph-chef'
+
+chef_version '>= 14.0'
