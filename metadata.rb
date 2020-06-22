@@ -1,10 +1,9 @@
 name 'ceph-chef'
 maintainer 'Hans Chris Jones'
 maintainer_email 'chris.jones@lambdastack.io'
-license 'Apache v2.0'
+license 'Apache-2.0'
 description 'Installs/Configures Ceph (Jewel and above)'
-long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version '1.1.27'
+version '2.0.0'
 
 depends	'apache2', '>= 1.1.12'
 depends 'apt'
@@ -19,3 +18,5 @@ supports 'centos', '>= 7.1'
 
 issues_url 'https://github.com/ceph/ceph-chef/issues'
 source_url 'https://github.com/ceph/ceph-chef'
+
+chef_version '>= 14.0'

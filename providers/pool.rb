@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,12 +18,6 @@
 #
 
 provides :ceph_chef_pool
-
-def whyrun_supported?
-  true
-end
-
-use_inline_resources
 
 action :create do
   if @current_resource.exists
@@ -131,4 +125,3 @@ rescue
   false
 end
 
-#

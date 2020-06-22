@@ -3,7 +3,7 @@
 # Cookbook: ceph
 # Recipe: mon_start
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,16 +33,14 @@ if service_type == 'upstart'
     provider Chef::Provider::Service::Upstart
     action [:stop]
   end
+elsif node['ceph']['version'] != 'hammer'
+  service 'ceph.target' do
+    service_name 'ceph.target'
+    provider Chef::Provider::Service::Systemd
+    action [:stop]
+  end
 else
-  if node['ceph']['version'] != 'hammer'
-    service 'ceph.target' do
-      service_name 'ceph.target'
-      provider Chef::Provider::Service::Systemd
-      action [:stop]
-    end
-  else
-    execute 'raw mon start' do
-      command 'service ceph stop mon'
-    end
+  execute 'raw mon start' do
+    command 'service ceph stop mon'
   end
 end

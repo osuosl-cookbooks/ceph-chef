@@ -1,5 +1,5 @@
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,8 +28,7 @@ default['ceph']['mon']['keyring_path'] = '/etc/ceph'
 # MUST be set in the wrapper cookbook or chef-repo like project
 default['ceph']['mon']['role'] = 'search-ceph-mon'
 
-case node['platform_family']
-when 'debian', 'rhel', 'fedora'
+if platform_family?('debian', 'rhel', 'fedora')
   packages = ['ceph']
   packages += debug_packages(packages) if node['ceph']['install_debug']
   default['ceph']['mon']['packages'] = packages

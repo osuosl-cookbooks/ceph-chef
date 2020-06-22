@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,14 +41,14 @@ if node['ceph']['netaddr_install']
     source '/tmp/netaddr-1.5.1.gem'
     action :install
     compile_time true
-    only_if { File.exist?('/tmp/netaddr-1.5.1.gem') }
+    only_if { ::File.exist?('/tmp/netaddr-1.5.1.gem') }
   end
 
   chef_gem 'netaddr' do
     action :install
     version '1.5.1'
     compile_time true
-    not_if { File.exist?('/tmp/netaddr-1.5.1.gem') }
+    not_if { ::File.exist?('/tmp/netaddr-1.5.1.gem') }
   end
 end
 

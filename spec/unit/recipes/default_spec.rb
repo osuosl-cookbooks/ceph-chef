@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: ceph-chef
+# Cookbook:: ceph-chef
 # Spec:: default
 #
-# Copyright (c) 2015, Bloomberg Finance L.P. All rights reserved
+# Copyright:: 2015-2020, Bloomberg Finance L.P. All rights reserved
 
 require 'spec_helper'
 

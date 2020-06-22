@@ -1,8 +1,8 @@
 #
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,15 +25,13 @@ service 'radosgw-stop' do
     service_name 'radosgw-all-starter'
     provider Chef::Provider::Service::Upstart
   else
-    if node['platform'] == 'debian'
+    if platform?('debian')
       service_name 'radosgw'
+    elsif node['ceph']['version'] != 'hammer'
+      service_name 'ceph-radosgw.target'
+      provider Chef::Provider::Service::Systemd
     else
-      if node['ceph']['version'] != 'hammer'
-        service_name 'ceph-radosgw.target'
-        provider Chef::Provider::Service::Systemd
-      else
-        service_name 'ceph-radosgw'
-      end
+      service_name 'ceph-radosgw'
     end
   end
   action [:stop]

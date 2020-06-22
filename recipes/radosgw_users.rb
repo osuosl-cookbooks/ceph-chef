@@ -1,8 +1,8 @@
 #
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,12 +29,6 @@ node['ceph']['radosgw']['users'].each do |user|
   if node['ceph']['pools']['radosgw']['federated_enable'] == false
     ruby_block "initialize-radosgw-user-#{user['name']}" do
       block do
-        max_buckets = if user.attribute?('max_buckets') && user['max_buckets'] > 0
-                        "--max-buckets=#{user['max_buckets']}"
-                      else
-                        ''
-                      end
-
         access_key = if user.attribute?('access_key') && !user['access_key'].to_s.strip.empty?
                        "#{user['access_key']}"
                      end
@@ -42,11 +36,6 @@ node['ceph']['radosgw']['users'].each do |user|
         secret_key = if user.attribute?('secret_key') && !user['secret_key'].to_s.strip.empty?
                        "#{user['secret_key']}"
                      end
-
-        rgw_admin = JSON.parse(`radosgw-admin user create --display-name="#{user['name']}" --uid="#{user['uid']}" "#{max_buckets}" --access-key="#{access_key}" --secret="#{secret_key}"`)
-        if user.attribute?('admin_caps') && !user['admin_caps'].empty?
-          rgw_admin_cap = JSON.parse(`radosgw-admin caps add --uid="#{user['uid']}" --caps="#{user['admin_caps']}"`)
-        end
       end
       not_if "radosgw-admin user info --uid='#{user['uid']}'"
       ignore_failure true
@@ -66,12 +55,6 @@ node['ceph']['radosgw']['users'].each do |user|
     node['ceph']['pools']['radosgw']['federated_zone_instances'].each do |inst|
       ruby_block "initialize-radosgw-user-#{user['name']}-#{inst['name']}" do
         block do
-          max_buckets = if user.attribute?('max_buckets') && user['max_buckets'] > 0
-                          "--max-buckets=#{user['max_buckets']}"
-                        else
-                          ''
-                        end
-
           access_key = if user.attribute?('access_key') && !user['access_key'].to_s.strip.empty?
                          "#{user['access_key']}"
                        end
@@ -79,28 +62,21 @@ node['ceph']['radosgw']['users'].each do |user|
           secret_key = if user.attribute?('secret_key') && !user['secret_key'].to_s.strip.empty?
                          "#{user['secret_key']}"
                        end
-
-          rgw_admin = JSON.parse(`sudo radosgw-admin user create --name client.radosgw.#{inst['region']}-#{inst['name']} --display-name="#{user['name']}" --uid="#{user['uid']}" "#{max_buckets}" --access-key="#{access_key}" --secret="#{secret_key}"`)
-          if user.attribute?('admin_caps') && !user['admin_caps'].empty?
-            rgw_admin_cap = JSON.parse(`sudo radosgw-admin caps add --name client.radosgw.#{inst['region']}-#{inst['name']} --uid="#{user['uid']}" --caps="#{user['admin_caps']}"`)
-          end
         end
         not_if "sudo radosgw-admin user info --name client.radosgw.#{inst['region']}-#{inst['name']} --uid='#{user['uid']}'"
         ignore_failure true
       end
 
-      if user.attribute?('buckets')
-        user['buckets'].each do |bucket|
-          execute "create-bucket-#{bucket['name']}" do
-            command "radosgw-admin2 --user #{user['uid']} --endpoint #{node['ceph']['radosgw']['default_url']} --port #{node['ceph']['radosgw']['port']} --bucket #{bucket['name']} -r #{inst['region']} -z #{inst['name']} --action create"
-            ignore_failure true
-          end
-          if bucket['acl'] == 'public'
-              execute "change-bucket-acl-#{bucket['name']}" do
-                command "radosgw-admin2 --user #{user['uid']} --endpoint #{node['ceph']['radosgw']['default_url']} --port #{node['ceph']['radosgw']['port']} --bucket #{bucket['name']} -r #{inst['region']} -z #{inst['name']} --action public"
-                ignore_failure true
-              end
-          end
+      next unless user.attribute?('buckets')
+      user['buckets'].each do |bucket|
+        execute "create-bucket-#{bucket['name']}" do
+          command "radosgw-admin2 --user #{user['uid']} --endpoint #{node['ceph']['radosgw']['default_url']} --port #{node['ceph']['radosgw']['port']} --bucket #{bucket['name']} -r #{inst['region']} -z #{inst['name']} --action create"
+          ignore_failure true
+        end
+        next unless bucket['acl'] == 'public'
+        execute "change-bucket-acl-#{bucket['name']}" do
+          command "radosgw-admin2 --user #{user['uid']} --endpoint #{node['ceph']['radosgw']['default_url']} --port #{node['ceph']['radosgw']['port']} --bucket #{bucket['name']} -r #{inst['region']} -z #{inst['name']} --action public"
+          ignore_failure true
         end
       end
     end

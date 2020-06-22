@@ -1,5 +1,5 @@
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ def cephfs_requires_fuse
   # What kernel version supports the given Ceph version tunables
   # http://ceph.com/docs/master/rados/operations/crush-map/
   min_versions = {
-    'hammer' => 3.18
+    'hammer' => 3.18,
   }
   min_versions.default = 3.18
 

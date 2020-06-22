@@ -1,5 +1,5 @@
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ default['ceph']['cephfs']['role'] = 'ceph-cephfs'
 
 case node['platform_family']
 when 'debian'
-  packages = ['ceph-fs-common', 'ceph-fuse']
+  packages = %w(ceph-fs-common ceph-fuse)
   packages += debug_packages(packages) if node['ceph']['install_debug']
   default['ceph']['cephfs']['packages'] = packages
 when 'rhel', 'fedora', 'suse'

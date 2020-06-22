@@ -1,8 +1,8 @@
 #
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,21 +23,19 @@ service 'radosgw-start' do
     service_name 'radosgw-all-starter'
     provider Chef::Provider::Service::Upstart
   else
-    if node['platform'] == 'debian'
+    if platform?('debian')
       service_name 'radosgw'
+    elsif node['ceph']['version'] != 'hammer'
+      # May want to do it another way - 'ceph-radosgw@radosgw.gateway' <-- Name of the service in ceph.conf
+      #  ('client.radosgw.gateway') less 'client' part based on stock unit file
+      # NB: Can supply your own unit file that allows for more custom radosgw naming.
+      service_name 'ceph-radosgw@radosgw.gateway'
+      provider Chef::Provider::Service::Systemd
     else
-      if node['ceph']['version'] != 'hammer'
-        # May want to do it another way - 'ceph-radosgw@radosgw.gateway' <-- Name of the service in ceph.conf
-        #  ('client.radosgw.gateway') less 'client' part based on stock unit file
-        # NB: Can supply your own unit file that allows for more custom radosgw naming.
-        service_name 'ceph-radosgw@radosgw.gateway'
-        provider Chef::Provider::Service::Systemd
-      else
-        service_name 'ceph-radosgw'
-      end
+      service_name 'ceph-radosgw'
     end
   end
-  supports :restart => true
+  supports restart: true
   action [:enable, :start]
   subscribes :restart, "template[/etc/ceph/#{node['ceph']['cluster']}.conf]"
 end

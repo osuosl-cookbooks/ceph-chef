@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,11 +20,10 @@
 # Add any finishing touches to the ceph install here.
 
 if node['ceph']['version'] == 'hammer'
-    case node['platform']
-    when 'ubuntu'
-    else
-      execute 'finish' do
-        command 'chkconfig ceph on'
-      end
+  if platform?('ubuntu')
+  else
+    execute 'finish' do
+      command 'chkconfig ceph on'
     end
+  end
 end

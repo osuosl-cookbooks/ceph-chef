@@ -1,5 +1,5 @@
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,8 +23,7 @@ default['ceph']['mds']['secret_file'] = '/etc/chef/secrets/ceph_chef_mds'
 # MUST be set in the wrapper cookbook or chef-repo like project
 default['ceph']['mds']['role'] = 'search-ceph-mds'
 
-case node['platform_family']
-when 'debian'
+if platform_family?('debian')
   packages = ['ceph-mds']
   packages += debug_packages(packages) if node['ceph']['install_debug']
   default['ceph']['mds']['packages'] = packages

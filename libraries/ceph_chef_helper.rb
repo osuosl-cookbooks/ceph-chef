@@ -1,8 +1,8 @@
 #
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,29 +71,29 @@ def ceph_chef_pool_create(pool)
       profile_val = pool_val['profile'] if type_val == 'erasure'
       crush_ruleset_name = pool_val['crush_ruleset_name']
 
-        if node['ceph']['pools']['version'] != 2
-          ceph_chef_pool name do
-            action :create
-            pg_num pg_num_val
-            pgp_num pg_num_val
-            type type_val
-            crush_ruleset pool_val['crush_ruleset'] if node['ceph']['osd']['crush']['update']
-            crush_ruleset_name crush_ruleset_name if !crush_ruleset_name.nil? && node['ceph']['osd']['crush']['update']
-            profile profile_val unless profile_val.nil?
-            options options_val unless options_val.nil?
-            # notifies :run, "bash[wait-for-pgs-creating]", :immediately
-          end
-        else
-            profile_val = '' if profile_val.nil?
-            # May want to add node['ceph']['osd']['crush']['update'] later...
-            crush_ruleset_name = '' if crush_ruleset_name.nil?
-            options_val = '' if options_val.nil?
-
-            execute "ceph-pool-create-#{name}" do
-              command lazy { "ceph osd pool create #{name} #{pg_num_val} #{pg_num_val} #{type_val} #{profile_val} #{crush_ruleset_name} #{options_val}" }
-              not_if "ceph osd pool get #{name} pg_num"
-            end
+      if node['ceph']['pools']['version'] != 2
+        ceph_chef_pool name do
+          action :create
+          pg_num pg_num_val
+          pgp_num pg_num_val
+          type type_val
+          crush_ruleset pool_val['crush_ruleset'] if node['ceph']['osd']['crush']['update']
+          crush_ruleset_name crush_ruleset_name if !crush_ruleset_name.nil? && node['ceph']['osd']['crush']['update']
+          profile profile_val unless profile_val.nil?
+          options options_val unless options_val.nil?
+          # notifies :run, "bash[wait-for-pgs-creating]", :immediately
         end
+      else
+        profile_val = '' if profile_val.nil?
+        # May want to add node['ceph']['osd']['crush']['update'] later...
+        crush_ruleset_name = '' if crush_ruleset_name.nil?
+        options_val = '' if options_val.nil?
+
+        execute "ceph-pool-create-#{name}" do
+          command lazy { "ceph osd pool create #{name} #{pg_num_val} #{pg_num_val} #{type_val} #{profile_val} #{crush_ruleset_name} #{options_val}" }
+          not_if "ceph osd pool get #{name} pg_num"
+        end
+      end
     end
   else
     node_loop = node['ceph']['pools'][pool]['pools']
@@ -105,27 +105,27 @@ def ceph_chef_pool_create(pool)
       options_val = node['ceph']['pools'][pool]['settings']['options'] if node['ceph']['pools'][pool]['settings']['options']
 
       if node['ceph']['pools']['version'] != 2
-          ceph_chef_pool pool_val['name'] do
-            action :create
-            pg_num pg_num_val
-            pgp_num pg_num_val
-            type type_val
-            crush_ruleset pool_val['crush_ruleset'] if node['ceph']['osd']['crush']['update']
-            crush_ruleset_name crush_ruleset_name if !crush_ruleset_name.nil? && node['ceph']['osd']['crush']['update']
-            profile profile_val unless profile_val.nil?
-            options node['ceph']['pools'][pool]['settings']['options'] if node['ceph']['pools'][pool]['settings']['options']
-            # notifies :run, "bash[wait-for-pgs-creating]", :immediately
-          end
+        ceph_chef_pool pool_val['name'] do
+          action :create
+          pg_num pg_num_val
+          pgp_num pg_num_val
+          type type_val
+          crush_ruleset pool_val['crush_ruleset'] if node['ceph']['osd']['crush']['update']
+          crush_ruleset_name crush_ruleset_name if !crush_ruleset_name.nil? && node['ceph']['osd']['crush']['update']
+          profile profile_val unless profile_val.nil?
+          options node['ceph']['pools'][pool]['settings']['options'] if node['ceph']['pools'][pool]['settings']['options']
+          # notifies :run, "bash[wait-for-pgs-creating]", :immediately
+        end
       else
-          profile_val = '' if profile_val.nil?
-          # May want to add node['ceph']['osd']['crush']['update'] later...
-          crush_ruleset_name = '' if crush_ruleset_name.nil? || !node['ceph']['osd']['crush']['update']
-          options_val = '' if options_val.nil?
+        profile_val = '' if profile_val.nil?
+        # May want to add node['ceph']['osd']['crush']['update'] later...
+        crush_ruleset_name = '' if crush_ruleset_name.nil? || !node['ceph']['osd']['crush']['update']
+        options_val = '' if options_val.nil?
 
-          execute "ceph-pool-create-#{pool_val['name']}" do
-            command lazy { "ceph osd pool create #{pool_val['name']} #{pg_num_val} #{pg_num_val} #{type_val} #{profile_val} #{crush_ruleset_name} #{options_val}" }
-            not_if "ceph osd pool get #{pool_val['name']} pg_num"
-          end
+        execute "ceph-pool-create-#{pool_val['name']}" do
+          command lazy { "ceph osd pool create #{pool_val['name']} #{pg_num_val} #{pg_num_val} #{type_val} #{profile_val} #{crush_ruleset_name} #{options_val}" }
+          not_if "ceph osd pool get #{pool_val['name']} pg_num"
+        end
       end
     end
   end
@@ -146,17 +146,17 @@ def ceph_chef_pool_set(pool)
             end
 
       if node['ceph']['pools']['version'] != 2
-          ceph_chef_pool name do
-            action :set
-            key 'size'
-            value val
-            not_if "ceph osd pool get #{name} size | grep #{val}"
-          end
+        ceph_chef_pool name do
+          action :set
+          key 'size'
+          value val
+          not_if "ceph osd pool get #{name} size | grep #{val}"
+        end
       else
-          execute "ceph-pool-set-#{name}" do
-            command lazy { "ceph osd pool set #{name} size #{val}" }
-            not_if "ceph osd pool get #{name} size | grep #{val}"
-          end
+        execute "ceph-pool-set-#{name}" do
+          command lazy { "ceph osd pool set #{name} size #{val}" }
+          not_if "ceph osd pool get #{name} size | grep #{val}"
+        end
       end
     end
   else
@@ -171,17 +171,17 @@ def ceph_chef_pool_set(pool)
             end
 
       if node['ceph']['pools']['version'] != 2
-          ceph_chef_pool pool_val['name'] do
-            action :set
-            key 'size'
-            value val
-            not_if "ceph osd pool get #{pool_val['name']} size | grep #{val}"
-          end
+        ceph_chef_pool pool_val['name'] do
+          action :set
+          key 'size'
+          value val
+          not_if "ceph osd pool get #{pool_val['name']} size | grep #{val}"
+        end
       else
-          execute "ceph-pool-set-#{pool_val['name']}" do
-            command lazy { "ceph osd pool set #{pool_val['name']} size #{val}" }
-            not_if "ceph osd pool get #{pool_val['name']} size | grep #{val}"
-          end
+        execute "ceph-pool-set-#{pool_val['name']}" do
+          command lazy { "ceph osd pool set #{pool_val['name']} size #{val}" }
+          not_if "ceph osd pool get #{pool_val['name']} size | grep #{val}"
+        end
       end
     end
   end
@@ -329,7 +329,7 @@ end
 def ceph_chef_fsid_secret
   if node['ceph']['encrypted_data_bags']
     secret = Chef::EncryptedDataBagItem.load_secret(node['ceph']['fsid']['secret_file'])
-    Chef::EncryptedDataBagItem.load('ceph', 'fsid', secret)['secret']
+    data_bag_item('ceph', 'fsid', secret)['secret']
   elsif !ceph_chef_mon_nodes.empty?
     secret = ceph_chef_mon_nodes[0]['ceph']['fsid-secret']
     if !secret.nil? && !secret.empty?
@@ -351,14 +351,14 @@ end
 # rubocop:enable Metrics/PerceivedComplexity
 
 def ceph_chef_save_fsid_secret(secret)
-  node.normal['ceph']['fsid-secret'] = secret
+  node.default['ceph']['fsid-secret'] = secret
   secret
 end
 
 def ceph_chef_mon_secret
   if node['ceph']['encrypted_data_bags']
     secret = Chef::EncryptedDataBagItem.load_secret(node['ceph']['mon']['secret_file'])
-    Chef::EncryptedDataBagItem.load('ceph', 'mon', secret)['secret']
+    data_bag_item('ceph', 'mon', secret)['secret']
   elsif !ceph_chef_mon_nodes.empty?
     ceph_chef_save_mon_secret(ceph_chef_mon_nodes[0]['ceph']['monitor-secret'])
     ceph_chef_mon_nodes[0]['ceph']['monitor-secret']
@@ -371,7 +371,7 @@ def ceph_chef_mon_secret
 end
 
 def ceph_chef_save_mon_secret(secret)
-  node.normal['ceph']['monitor-secret'] = secret
+  node.default['ceph']['monitor-secret'] = secret
   secret
 end
 
@@ -389,7 +389,7 @@ def ceph_chef_mgr_secret
 end
 
 def ceph_chef_save_mgr_secret(secret)
-  node.normal['ceph']['mgr-secret'] = secret
+  node.default['ceph']['mgr-secret'] = secret
   secret
 end
 
@@ -401,7 +401,7 @@ end
 def ceph_chef_bootstrap_osd_secret
   if node['ceph']['encrypted_data_bags']
     secret = Chef::EncryptedDataBagItem.load_secret(node['ceph']['bootstrap-osd']['secret_file'])
-    Chef::EncryptedDataBagItem.load('ceph', 'bootstrap-osd', secret)['secret']
+    data_bag_item('ceph', 'bootstrap-osd', secret)['secret']
   elsif !ceph_chef_mon_nodes.empty?
     ceph_chef_save_bootstrap_osd_secret(ceph_chef_mon_nodes[0]['ceph']['bootstrap-osd'])
     ceph_chef_mon_nodes[0]['ceph']['bootstrap-osd']
@@ -416,7 +416,7 @@ end
 # NOTE: It's also best to store the keyring files of ceph in a neutral location so that if needed you can easily
 # retrieve them.
 def ceph_chef_save_bootstrap_osd_secret(secret)
-  node.normal['ceph']['bootstrap-osd'] = secret
+  node.default['ceph']['bootstrap-osd'] = secret
   secret
 end
 
@@ -424,7 +424,7 @@ end
 def ceph_chef_bootstrap_rgw_secret
   if node['ceph']['encrypted_data_bags']
     secret = Chef::EncryptedDataBagItem.load_secret(node['ceph']['bootstrap-rgw']['secret_file'])
-    Chef::EncryptedDataBagItem.load('ceph', 'bootstrap-rgw', secret)['secret']
+    data_bag_item('ceph', 'bootstrap-rgw', secret)['secret']
   elsif !ceph_chef_mon_nodes.empty?
     ceph_chef_save_bootstrap_rgw_secret(ceph_chef_mon_nodes[0]['ceph']['bootstrap-rgw'])
     ceph_chef_mon_nodes[0]['ceph']['bootstrap-rgw']
@@ -439,7 +439,7 @@ end
 # NOTE: It's also best to store the keyring files of ceph in a neutral location so that if needed you can easily
 # retrieve them.
 def ceph_chef_save_bootstrap_rgw_secret(secret)
-  node.normal['ceph']['bootstrap-rgw'] = secret
+  node.default['ceph']['bootstrap-rgw'] = secret
   secret
 end
 
@@ -447,7 +447,7 @@ end
 def ceph_chef_bootstrap_mds_secret
   if node['ceph']['encrypted_data_bags']
     secret = Chef::EncryptedDataBagItem.load_secret(node['ceph']['bootstrap-mds']['secret_file'])
-    Chef::EncryptedDataBagItem.load('ceph', 'bootstrap-mds', secret)['secret']
+    data_bag_item('ceph', 'bootstrap-mds', secret)['secret']
   elsif !ceph_chef_mon_nodes.empty?
     ceph_chef_save_bootstrap_mds_secret(ceph_chef_mon_nodes[0]['ceph']['bootstrap-mds'])
     ceph_chef_mon_nodes[0]['ceph']['bootstrap-mds']
@@ -462,14 +462,14 @@ end
 # NOTE: It's also best to store the keyring files of ceph in a neutral location so that if needed you can easily
 # retrieve them.
 def ceph_chef_save_bootstrap_mds_secret(secret)
-  node.normal['ceph']['bootstrap-mds'] = secret
+  node.default['ceph']['bootstrap-mds'] = secret
   secret
 end
 
 def ceph_chef_admin_secret
   if node['ceph']['encrypted_data_bags']
     secret = Chef::EncryptedDataBagItem.load_secret(node['ceph']['admin']['secret_file'])
-    Chef::EncryptedDataBagItem.load('ceph', 'admin', secret)['secret']
+    data_bag_item('ceph', 'admin', secret)['secret']
   elsif !ceph_chef_admin_nodes.empty?
     ceph_chef_save_admin_secret(ceph_chef_admin_nodes[0]['ceph']['admin-secret'])
     ceph_chef_admin_nodes[0]['ceph']['admin-secret']
@@ -482,7 +482,7 @@ def ceph_chef_admin_secret
 end
 
 def ceph_chef_save_admin_secret(secret)
-  node.normal['ceph']['admin-secret'] = secret
+  node.default['ceph']['admin-secret'] = secret
   secret
 end
 
@@ -491,13 +491,11 @@ def ceph_chef_radosgw_secret
   return node['ceph']['radosgw-secret'] if node['ceph']['radosgw-secret']
   if node['ceph']['encrypted_data_bags']
     secret = Chef::EncryptedDataBagItem.load_secret(node['ceph']['radosgw']['secret_file'])
-    Chef::EncryptedDataBagItem.load('ceph', 'radowgw', secret)['secret']
+    data_bag_item('ceph', 'radowgw', secret)['secret']
   elsif !ceph_chef_radosgw_nodes.empty?
     rgw_inst = ceph_chef_radosgw_nodes[0]
     if rgw_inst['ceph']['radosgw-secret']
-      return ceph_chef_save_radosgw_secret(rgw_inst['ceph']['radosgw-secret'])
-    else
-      return nil
+      ceph_chef_save_radosgw_secret(rgw_inst['ceph']['radosgw-secret'])
     end
   elsif node['ceph']['radosgw-secret']
     node['ceph']['radosgw-secret']
@@ -508,7 +506,7 @@ def ceph_chef_radosgw_secret
 end
 
 def ceph_chef_save_radosgw_secret(secret)
-  node.normal['ceph']['radosgw-secret'] = secret
+  node.default['ceph']['radosgw-secret'] = secret
   node['ceph']['radosgw-secret']
 end
 
@@ -521,7 +519,7 @@ def ceph_chef_radosgw_inst_secret(inst)
     # Get the first rgw nodes value
     rgw_inst = ceph_chef_radosgw_nodes[0]
     if rgw_inst['ceph']["radosgw-secret-#{inst}"]
-      return ceph_chef_save_radosgw_inst_secret(rgw_inst['ceph']["radosgw-secret-#{inst}"], inst)
+      ceph_chef_save_radosgw_inst_secret(rgw_inst['ceph']["radosgw-secret-#{inst}"], inst)
       # rgw_inst['ceph']["radosgw-secret-#{inst}"]
     end
   elsif node['ceph']["radosgw-secret-#{inst}"]
@@ -533,14 +531,14 @@ def ceph_chef_radosgw_inst_secret(inst)
 end
 
 def ceph_chef_save_radosgw_inst_secret(secret, inst)
-  node.normal['ceph']["radosgw-secret-#{inst}"] = secret
+  node.default['ceph']["radosgw-secret-#{inst}"] = secret
   node['ceph']["radosgw-secret-#{inst}"]
 end
 
 def ceph_chef_restapi_secret
   if node['ceph']['encrypted_data_bags']
     secret = Chef::EncryptedDataBagItem.load_secret(node['ceph']['restapi']['secret_file'])
-    Chef::EncryptedDataBagItem.load('ceph', 'restapi', secret)['secret']
+    data_bag_item('ceph', 'restapi', secret)['secret']
   elsif !ceph_chef_restapi_nodes.empty?
     ceph_chef_save_restapi_secret(ceph_chef_restapi_nodes[0]['ceph']['restapi-secret'])
     ceph_chef_restapi_nodes[0]['ceph']['restapi-secret']
@@ -553,7 +551,7 @@ def ceph_chef_restapi_secret
 end
 
 def ceph_chef_save_restapi_secret(secret)
-  node.normal['ceph']['restapi-secret'] = secret
+  node.default['ceph']['restapi-secret'] = secret
   # ceph_chef_set_item('restapi-secret', secret)
   secret
 end
@@ -802,12 +800,8 @@ def ceph_chef_secure_password_alphanum_upper(len = 20)
   # We could probably optimize this to be in one pass if we could easily
   # handle the case where random_bytes doesn't return a rejected char.
   raw_pw = ''
-  while raw_pw.length < len
-    raw_pw << ::OpenSSL::Random.random_bytes(1).gsub(/\W/, '')
-  end
+  raw_pw << ::OpenSSL::Random.random_bytes(1).gsub(/\W/, '') while raw_pw.length < len
   pw = ''
-  while pw.length < len
-    pw << alphanum_upper[raw_pw.bytes.to_a[pw.length] % alphanum_upper.length]
-  end
+  pw << alphanum_upper[raw_pw.bytes.to_a[pw.length] % alphanum_upper.length] while pw.length < len
   pw
 end

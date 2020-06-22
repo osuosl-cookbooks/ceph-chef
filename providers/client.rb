@@ -1,5 +1,5 @@
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-use_inline_resources
-
-def whyrun_supported?
-  true
-end
 
 action :add do
   filename = @current_resource.filename
@@ -67,7 +61,7 @@ def load_current_resource
   @current_resource.key(get_key(@current_resource.keyname))
   @current_resource.caps_match = @current_resource.caps == @new_resource.caps
   @current_resource.keys_match = @new_resource.key.nil? || (@current_resource.key == @new_resource.key)
-  @current_resource.exists = ! (@current_resource.key.nil? || @current_resource.key.empty?)
+  @current_resource.exists = !(@current_resource.key.nil? || @current_resource.key.empty?)
 end
 
 def file_content(keyname, key, as_keyring)

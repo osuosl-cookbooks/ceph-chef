@@ -1,8 +1,8 @@
 #
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
-# Cookbook Name:: cepheus
+# Cookbook:: cepheus
 #
-# Copyright 2017, LambdaStack
+# Copyright:: 2017-2020, LambdaStack
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@
 
 # If using Ubuntu then must be using 16.04 or higher
 if node['ceph']['radosgw']['rgw_webservice']['enable']
-    execute 'rgw-webservice-start' do
-        command 'sudo systemctl start rgw_webservice'
-        ignore_failure true
-    end
+  execute 'rgw-webservice-start' do
+    command 'sudo systemctl start rgw_webservice'
+    ignore_failure true
+  end
 end

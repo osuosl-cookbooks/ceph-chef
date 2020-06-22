@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ default['ceph']['pools']['radosgw']['pools'] = [
   { 'name' => '.intent-log', 'data_percent' => 0.10, 'type' => 'replicated', 'profile' => '', 'crush_ruleset' => -1, 'crush_ruleset_name' => '' },
   { 'name' => '.rgw.buckets', 'data_percent' => 96.90, 'type' => 'replicated', 'profile' => '', 'crush_ruleset' => -1, 'crush_ruleset_name' => '' },
   { 'name' => '.rgw.buckets.index', 'data_percent' => 1.00, 'type' => 'replicated', 'profile' => '', 'crush_ruleset' => -1, 'crush_ruleset_name' => '' },
-  { 'name' => '.rgw.buckets.extra', 'data_percent' => 1.00, 'type' => 'replicated', 'profile' => '', 'crush_ruleset' => -1, 'crush_ruleset_name' => '' }
+  { 'name' => '.rgw.buckets.extra', 'data_percent' => 1.00, 'type' => 'replicated', 'profile' => '', 'crush_ruleset' => -1, 'crush_ruleset_name' => '' },
 ]
 
 default['ceph']['pools']['rbd']['pools'] = []
@@ -123,7 +123,7 @@ default['ceph']['pools']['pgs']['calc'] = {
   'total_osds' => 12,
   'target_pgs_per_osd' => 200,
   'replicated_size' => 3,
-  'erasure_size' => 11
+  'erasure_size' => 11,
 }
 
 default['ceph']['pools']['pgs']['num'] = 128
@@ -140,4 +140,4 @@ default['ceph']['pools']['rbd']['settings'] = {}
 # List of pools to process
 # If your given environment does not use one of these then override it in your environment.yaml file
 # NOTE: Only valid options are 'radosgw' and 'rbd' at present
-default['ceph']['pools']['active'] = ['radosgw', 'rbd']
+default['ceph']['pools']['active'] = %w(radosgw rbd)

@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 #
 
 if node['ceph']['repo']['create']
-    include_recipe 'yum-epel::default'
+  include_recipe 'yum-epel::default'
 end
 
 platform_family = node['platform_family']
@@ -33,7 +33,7 @@ end
 
 branch = node['ceph']['branch']
 if branch == 'dev' && platform_family != 'centos' && platform_family != 'fedora'
-  fail "Dev branch for #{platform_family} is not yet supported"
+  raise "Dev branch for #{platform_family} is not yet supported"
 end
 
 # If you use Ceph with no access to the outside world and use RHEL Satellite server then MAKE sure this value is set to false!
@@ -54,12 +54,12 @@ package 'redhat-lsb-core' do # lsb-init
   not_if 'test -s /lib/lsb/init-functions'
 end
 
-if node['platform_family'] == 'rhel' && node['platform_version'].to_f > 6
+if platform_family?('rhel') && node['platform_version'].to_f > 6
   if node['ceph']['btrfs']
     package 'btrfs-progs' # needed to format as btrfs, (if you use it - default is false)
   end
 end
 
-if node['platform_family'] == 'rhel' && node['platform_version'].to_f < 7
+if platform_family?('rhel') && node['platform_version'].to_f < 7
   package 'python-argparse'
 end

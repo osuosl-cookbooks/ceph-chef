@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,16 +25,15 @@ service_type = node['ceph']['mon']['init_style']
 
 # if node['ceph']['version'] == 'hammer'
 directory "/var/lib/ceph/restapi/#{node['ceph']['cluster']}-restapi" do
-    owner node['ceph']['owner']
-    group node['ceph']['group']
-    mode 0755
-    recursive true
-    action :create
-    not_if "test -d /var/lib/ceph/restapi/#{node['ceph']['cluster']}-restapi"
+  owner node['ceph']['owner']
+  group node['ceph']['group']
+  mode '755'
+  recursive true
+  action :create
+  not_if "test -d /var/lib/ceph/restapi/#{node['ceph']['cluster']}-restapi"
 end
 # end
 
-base_key = "/etc/ceph/#{node['ceph']['cluster']}.client.admin.keyring"
 keyring = "/etc/ceph/#{node['ceph']['cluster']}.client.restapi.keyring"
 
 # NOTE: If the restapi keyring exists and you are using the same key on for different nodes (load balancing) then
@@ -66,7 +65,7 @@ ruby_block 'save restapi_secret' do
     fetch.run_command
     key = fetch.stdout
     # ceph_chef_set_item('restapi-secret', key.delete!("\n"))
-    node.normal['ceph']['restapi-secret'] = key.delete!("\n")
+    node.default['ceph']['restapi-secret'] = key.delete!("\n")
     # node.save
   end
   action :nothing

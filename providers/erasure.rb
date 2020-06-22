@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,12 +18,6 @@
 #
 
 provides :ceph_chef_erasure
-
-def whyrun_supported?
-  true
-end
-
-use_inline_resources
 
 action :set do
   converge_by("Creating #{@new_resource}") do

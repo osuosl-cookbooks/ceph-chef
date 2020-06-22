@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph-chef
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,16 +46,16 @@ template "/etc/ceph/#{node['ceph']['cluster']}.conf" do
   source 'ceph.conf.erb'
   variables lazy {
     {
-      :fsid_secret => ceph_chef_fsid_secret,
-      :mon_addresses => ceph_chef_mon_addresses,
-      :is_mon => ceph_chef_is_mon_node,
-      :is_rgw => ceph_chef_is_radosgw_node,
-      :is_rbd => ceph_chef_is_rbd_node,
-      :is_mds => ceph_chef_is_mds_node,
-      :is_admin => ceph_chef_is_admin_node,
-      :is_osd => ceph_chef_is_osd_node,
-      :is_rest_api => ceph_chef_is_restapi_node,
-      :is_federated => ceph_chef_is_radosgw_federated
+      fsid_secret: ceph_chef_fsid_secret,
+      mon_addresses: ceph_chef_mon_addresses,
+      is_mon: ceph_chef_is_mon_node,
+      is_rgw: ceph_chef_is_radosgw_node,
+      is_rbd: ceph_chef_is_rbd_node,
+      is_mds: ceph_chef_is_mds_node,
+      is_admin: ceph_chef_is_admin_node,
+      is_osd: ceph_chef_is_osd_node,
+      is_rest_api: ceph_chef_is_restapi_node,
+      is_federated: ceph_chef_is_radosgw_federated,
     }
   }
   mode '0644'

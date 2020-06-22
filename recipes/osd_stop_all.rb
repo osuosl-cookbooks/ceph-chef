@@ -1,9 +1,9 @@
 #
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 # Recipe:: osd
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,16 +30,14 @@ if service_type == 'upstart'
     end
     action [:stop]
   end
+elsif node['ceph']['version'] != 'hammer'
+  service 'ceph.target' do
+    service_name 'ceph.target'
+    provider Chef::Provider::Service::Systemd
+    action [:stop]
+  end
 else
-  if node['ceph']['version'] != 'hammer'
-    service 'ceph.target' do
-      service_name 'ceph.target'
-      provider Chef::Provider::Service::Systemd
-      action [:stop]
-    end
-  else
-    execute 'raw osd stop all' do
-      command 'service ceph stop osd'
-    end
+  execute 'raw osd stop all' do
+    command 'service ceph stop osd'
   end
 end

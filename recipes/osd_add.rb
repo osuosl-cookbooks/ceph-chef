@@ -1,8 +1,8 @@
 #
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
-# Cookbook Name:: ceph
+# Cookbook:: ceph
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ if node['ceph']['osd']['add']
     # Add this status to the node env so that we can implement recreate and/or delete functionalities in the future.
     ruby_block "save osd_device status #{index}" do
       block do
-        node.normal['ceph']['osd']['devices'][index]['status'] = 'deployed'
+        node.default['ceph']['osd']['devices'][index]['status'] = 'deployed'
         # node.save
       end
       action :nothing

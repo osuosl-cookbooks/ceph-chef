@@ -1,5 +1,5 @@
 #
-# Copyright 2017, Bloomberg Finance L.P.
+# Copyright:: 2017-2020, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-def whyrun_supported?
-  true
-end
 
 action :mount do
   converge_by("Creating cephfs mount at #{@new_resource.directory}") do
@@ -66,7 +62,7 @@ def manage_mount(dir, subdir, use_fuse, act)
 
   if use_fuse
     if subdir != '/'
-      Chef::Application.fatal!("Can't use a subdir with fuse mounts yet")
+      raise("Can't use a subdir with fuse mounts yet")
     end
     mount "#{act} #{dir}" do
       mount_point dir
