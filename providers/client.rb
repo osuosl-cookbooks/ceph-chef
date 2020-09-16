@@ -74,13 +74,13 @@ end
 
 def get_key(keyname)
   cmd = "ceph auth print_key #{keyname} --name mon. --key='#{ceph_chef_mon_secret}'"
-  Mixlib::ShellOut.new(cmd).run_command.stdout
+  shell_out(cmd).stdout
 end
 
 def get_caps(keyname)
   caps = {}
   cmd = "ceph auth get #{keyname} --name mon. --key='#{ceph_chef_mon_secret}'"
-  output = Mixlib::ShellOut.new(cmd).run_command.stdout
+  output = shell_out(cmd).stdout
   output.scan(/caps\s*(\S+)\s*=\s*"([^"]*)"/) { |k, v| caps[k] = v }
   caps
 end
