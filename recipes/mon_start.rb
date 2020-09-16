@@ -20,8 +20,6 @@
 
 # This recipe starts a monitor. The mon.rb recipe must have been called earlier.
 
-include_recipe 'chef-sugar::default'
-
 service_type = node['ceph']['mon']['init_style']
 
 if service_type == 'upstart'

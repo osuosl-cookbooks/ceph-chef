@@ -20,8 +20,6 @@
 
 # This recipe stops the ceph mon (only one per node) on the given node
 
-include_recipe 'chef-sugar::default'
-
 service_type = node['ceph']['mon']['init_style']
 
 if service_type == 'upstart'
