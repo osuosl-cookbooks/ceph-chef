@@ -73,7 +73,7 @@ end
 cookbook_file '/etc/ceph/scripts/ceph_journal.sh' do
   source 'ceph_journal.sh'
   mode node['ceph']['mode']
-  not_if 'test -f /etc/ceph/scripts/ceph_journal.sh'
+  action :create_if_missing
 end
 
 if node['ceph']['version'] == 'hammer'

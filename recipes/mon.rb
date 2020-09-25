@@ -38,8 +38,6 @@
 # server to keep your cluster in time sync. If time drift occurs then ceph will not work properly. This is
 # true for any distributed system.
 
-include_recipe 'chef-sugar::default'
-
 node.default['ceph']['is_mon'] = true
 
 include_recipe 'ceph-chef'

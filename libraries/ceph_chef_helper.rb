@@ -702,8 +702,7 @@ end
 
 def ceph_chef_mon_node_ip(nodeish)
   # Note: A valid cidr block MUST exist! or node['ceph']['config']['global']['public addr'] MUST be populated.
-  mon_ip = ceph_chef_find_node_ip_in_network(node['ceph']['network']['public']['cidr'], nodeish) || nodeish['ceph']['config'].fetch('global', {}).fetch('public addr', nil)
-  mon_ip
+  ceph_chef_find_node_ip_in_network(node['ceph']['network']['public']['cidr'], nodeish) || nodeish['ceph']['config'].fetch('global', {}).fetch('public addr', nil)
 end
 
 def ceph_chef_mon_nodes_host(nodes)
@@ -795,8 +794,8 @@ end
 
 def ceph_chef_secure_password_alphanum_upper(len = 20)
   # Chef's syntax checker doesn't like multiple exploders in same line. Sigh.
-  alphanum_upper = [*'0'..'9']
-  alphanum_upper += [*'A'..'Z']
+  alphanum_upper = Array('0'..'9')
+  alphanum_upper += Array('A'..'Z')
   # We could probably optimize this to be in one pass if we could easily
   # handle the case where random_bytes doesn't return a rejected char.
   raw_pw = ''
