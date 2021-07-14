@@ -2,7 +2,7 @@
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook:: cepheus
 #
-# Copyright:: 2017-2020, LambdaStack
+# Copyright:: 2017-2021, LambdaStack
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
