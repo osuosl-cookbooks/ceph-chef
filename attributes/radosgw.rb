@@ -2,7 +2,7 @@
 # Cookbook:: ceph
 # Attributes:: radosgw
 #
-# Copyright:: 2017-2020, Bloomberg Finance L.P.
+# Copyright:: 2017-2021, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Copyright:: 2011-2020, DreamHost Web Hosting
+# Copyright:: 2011-2021, DreamHost Web Hosting
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

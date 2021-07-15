@@ -1,5 +1,5 @@
 #
-# Copyright:: 2017-2020, Bloomberg Finance L.P.
+# Copyright:: 2017-2021, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
 
 actions :add
 default_action :add
+
+unified_mode true
 
 attribute :caps, kind_of: Hash, default: { 'mon' => 'allow r', 'osd' => 'allow r' }
 

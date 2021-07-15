@@ -2,7 +2,7 @@
 # Author:: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook:: ceph
 #
-# Copyright:: 2017-2020, Bloomberg Finance L.P.
+# Copyright:: 2017-2021, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -139,11 +139,7 @@ def ceph_chef_pool_set(pool)
     node_loop.each do |name|
       # if node['ceph']['pools'][pool]['settings']['type'] == 'replicated'
       next unless name['type'] == 'replicated'
-      val = if node['ceph']['pools'][pool]['settings']['size']
-              node['ceph']['pools'][pool]['settings']['size']
-            else
-              node['ceph']['osd']['size']['max']
-            end
+      val = node['ceph']['pools'][pool]['settings']['size'] || node['ceph']['osd']['size']['max']
 
       if node['ceph']['pools']['version'] != 2
         ceph_chef_pool name do
@@ -164,11 +160,7 @@ def ceph_chef_pool_set(pool)
     node_loop.each do |pool_val|
       # if node['ceph']['pools'][pool]['settings']['type'] == 'replicated'
       next unless pool_val['type'] == 'replicated'
-      val = if node['ceph']['pools'][pool]['settings']['size']
-              node['ceph']['pools'][pool]['settings']['size']
-            else
-              node['ceph']['osd']['size']['max']
-            end
+      val = node['ceph']['pools'][pool]['settings']['size'] || node['ceph']['osd']['size']['max']
 
       if node['ceph']['pools']['version'] != 2
         ceph_chef_pool pool_val['name'] do
@@ -701,7 +693,7 @@ def ceph_chef_mon_nodes_ip(nodes)
 end
 
 def ceph_chef_mon_node_ip(nodeish)
-  # Note: A valid cidr block MUST exist! or node['ceph']['config']['global']['public addr'] MUST be populated.
+  # NOTE: A valid cidr block MUST exist! or node['ceph']['config']['global']['public addr'] MUST be populated.
   ceph_chef_find_node_ip_in_network(node['ceph']['network']['public']['cidr'], nodeish) || nodeish['ceph']['config'].fetch('global', {}).fetch('public addr', nil)
 end
 

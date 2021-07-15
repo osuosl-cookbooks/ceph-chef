@@ -1,5 +1,5 @@
 #
-# Copyright:: 2017-2020, Bloomberg Finance L.P.
+# Copyright:: 2017-2021, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
 
 actions :mount, :umount, :remount, :enable, :disable
 default_action :mount
+
+unified_mode true
 
 attribute :directory, kind_of: String, name_attribute: true
 attribute :use_fuse, kind_of: [TrueClass, FalseClass], required: true

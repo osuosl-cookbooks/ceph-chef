@@ -2,7 +2,7 @@
 # Author: Hans Chris Jones <chris.jones@lambdastack.io>
 # Cookbook: ceph
 #
-# Copyright:: 2017-2020, Bloomberg Finance L.P.
+# Copyright:: 2017-2021, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ action :create do
   end
 end
 
-# Note: Set only checks for existing resourse and not if the pool is set to the value passed so it will
+# NOTE: Set only checks for existing resourse and not if the pool is set to the value passed so it will
 # always run in a chef-client run.
 action :set do
   if !@current_resource.exists
@@ -98,12 +98,12 @@ def set_pool_crush_ruleset
   Chef::Log.debug "Pool crush_ruleset updated: #{cmd.stderr}"
 end
 
-# rubocop:disable Style/AccessorMethodName
+# rubocop:disable Naming/AccessorMethodName
 def get_pool
   cmd = shell_out("ceph osd pool get #{new_resource.name} #{new_resource.key}")
   cmd.stdout
 end
-# rubocop:enable Style/AccessorMethodName
+# rubocop:enable Naming/AccessorMethodName
 
 def delete_pool
   cmd_text = "ceph osd pool delete #{new_resource.name}"
@@ -124,4 +124,3 @@ rescue
   Chef::Log.debug "Pool doesn't seem to exist: #{cmd.stderr}"
   false
 end
-
