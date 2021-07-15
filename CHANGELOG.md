@@ -4,6 +4,10 @@ ceph-chef
 NOTE: You can find out how to use this cookbook and see how Bloomberg uses it at:
 https://github.com/bloomberg/chef-bcs
 
+4.0.0 (2021-07-15)
+------------------
+- Enable unified_mode for Chef 17
+
 3.0.0 (2020-09-25)
 ------------------
 - Chef 16 fixes

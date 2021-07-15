@@ -1,0 +1,4 @@
+cookbook=ceph-chef
+version=3.0.0
+envs=*
+pr_link=https://github.com/osuosl-cookbooks/ceph-chef/pull/4
